@@ -1,6 +1,5 @@
 project (strigiclient)
 
-
 ##### cmake settings #####
 
 cmake_minimum_required(VERSION 2.6)
@@ -35,26 +34,28 @@ if(QT4_FOUND)
 endif(QT4_FOUND)
 
 # check for required packages
-if(STRIGI_VERSION_STRING)
-	# if STRIGI_VERSION_STRING is defined, we are compiling the meta-package
-	set(LIBSTREAMS_INCLUDE_DIRS
-		../libstreams/include
-		${CMAKE_CURRENT_BINARY_DIR}/../libstreams/include)
-	set(LIBSTREAMANALYZER_INCLUDE_DIRS
-		../libstreamanalyzer/include
-		${CMAKE_CURRENT_BINARY_DIR}/../libstreamanalyzer/include)
-	set(LIBSEARCHCLIENT_INCLUDE_DIRS
-		../strigidaemon/include)
-	set(LIBSTREAMS_LIBRARIES streams)
-	set(LIBSTREAMANALYZER_LIBRARIES streamanalyzer)
-else(STRIGI_VERSION_STRING)
-	find_package(LibStreams REQUIRED)
-	find_package(LibStreamAnalyzer REQUIRED)
-	find_package(LibSearchClient REQUIRED)
-endif(STRIGI_VERSION_STRING)
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+  find_package(LibStreams REQUIRED)
+  find_package(LibStreamAnalyzer REQUIRED)
+  find_package(LibSearchClient REQUIRED)
+else()
+  set(LIBSTREAMS_INCLUDE_DIRS
+    ${libstreams_SOURCE_DIR}/include
+    ${libstreams_BINARY_DIR}/include
+    )
+  set(LIBSTREAMANALYZER_INCLUDE_DIRS
+    ${libstreamanalyzer_SOURCE_DIR}/include
+    ${libstreamanalyzer_BINARY_DIR}/include
+    )
+set(LIBSEARCHCLIENT_INCLUDE_DIRS
+    ${strigidaemon_SOURCE_DIR}/include
+    ${strigidaemon_BINARY_DIR}/include
+    )
+  set(LIBSTREAMS_LIBRARIES streams)
+  set(LIBSTREAMANALYZER_LIBRARIES streamanalyzer)
+endif()
 
 ##### building and testing #####
-
 
 # every directory needs the headers that will be installed
 include_directories(${LIBSTREAMS_INCLUDE_DIRS}
