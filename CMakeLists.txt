@@ -37,7 +37,9 @@ endif(QT4_FOUND)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
   find_package(LibStreams REQUIRED)
   find_package(LibStreamAnalyzer REQUIRED)
-  find_package(LibSearchClient REQUIRED)
+  if(NOT WIN32)
+    find_package(LibSearchClient REQUIRED)
+  endif()
 else()
   set(LIBSTREAMS_INCLUDE_DIRS
     ${libstreams_SOURCE_DIR}/include
@@ -47,10 +49,12 @@ else()
     ${libstreamanalyzer_SOURCE_DIR}/include
     ${libstreamanalyzer_BINARY_DIR}/include
     )
-set(LIBSEARCHCLIENT_INCLUDE_DIRS
-    ${strigidaemon_SOURCE_DIR}/include
-    ${strigidaemon_BINARY_DIR}/include
-    )
+    if(NOT WIN32)
+      set(LIBSEARCHCLIENT_INCLUDE_DIRS
+        ${strigidaemon_SOURCE_DIR}/include
+        ${strigidaemon_BINARY_DIR}/include
+      )
+    endif()
   set(LIBSTREAMS_LIBRARIES streams)
   set(LIBSTREAMANALYZER_LIBRARIES streamanalyzer)
 endif()
@@ -60,14 +64,21 @@ endif()
 # every directory needs the headers that will be installed
 include_directories(${LIBSTREAMS_INCLUDE_DIRS}
 	${LIBSTREAMANALYZER_INCLUDE_DIRS}
-	${LIBSEARCHCLIENT_INCLUDE_DIRS}
-	lib/htmlgui
-	lib/searchclient/filterwidget
 	lib/searchclient/qtdbus
 )
 
+if(NOT WIN32)
+  include_directories(${LIBSEARCHCLIENT_INCLUDE_DIRS}
+                      lib/htmlgui
+                      lib/searchclient/filterwidget
+  )
+endif()
+
 link_directories(${LIBSTREAMANALYZER_LIBRARY_DIRS})
-link_directories(${LIBSEARCHCLIENT_LIBRARY_DIRS})
+
+if(NOT WIN32)
+  link_directories(${LIBSEARCHCLIENT_LIBRARY_DIRS})
+endif()
 
 add_subdirectory(lib)
 add_subdirectory(bin)
