@@ -180,7 +180,7 @@ toID(const QList<StrigiHit>& hits) {
             string name = (const char*)j.key().toUtf8();
             for (int k = 0; k < j.value().size(); ++k) {
                  string v = (const char*)j.value()[k].toUtf8();
-                 i.properties.insert(make_pair<string,string>(name, v));
+                 i.properties.insert(make_pair(name, v));
             }
         }
         id.hits.push_back(i);
