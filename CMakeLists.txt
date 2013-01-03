@@ -2,7 +2,7 @@ project (strigiclient)
 
 ##### cmake settings #####
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(MacroFindOptionalDep)
 enable_testing()
@@ -13,8 +13,8 @@ option(ENABLE_QT4 "enable Qt4 GUI" ON)
 set(QT_MIN_VERSION "4.3.0")
 
 # definition of LIB_DESTINATION which is the path where the lib is installed
-set (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
-set (LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Library directory name" FORCE)
+include(GNUInstallDirs)
+set(LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
 # Set up RPATH handling, so the libs are found if they are installed to a non-standard location.
 # By default cmake builds the targets with full RPATH to everything in the build directory,
